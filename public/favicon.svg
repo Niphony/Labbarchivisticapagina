@@ -1,6 +1,0 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" fill="none">
-  <rect width="32" height="32" rx="6" fill="#0b1929"/>
-  <rect x="1" y="1" width="30" height="30" rx="5" stroke="#0ea5e9" stroke-width="1.5" fill="none"/>
-  <path d="M16 4L28 11v7c0 7-5 12-12 13C9 30 4 25 4 18v-7L16 4z" fill="#0d2137" stroke="#38bdf8" stroke-width="1"/>
-  <text x="16" y="20" text-anchor="middle" font-size="9" font-weight="700" fill="white" font-family="sans-serif">UD</text>
-</svg>
