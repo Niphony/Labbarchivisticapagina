@@ -1,0 +1,59 @@
+
+services:
+
+  # ─── BASE DE DATOS ──────────────────────────────
+  postgres:
+    image: postgres:15
+    container_name: lab_postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_PASSWORD: cambia_esta_clave
+      POSTGRES_USER: labadmin
+    volumes:
+      # Ahora todo se guarda dentro de ./Docker_config/
+      - ./Docker_config/postgres/data:/var/lib/postgresql/data
+      - ./Docker_config/postgres/init:/docker-entrypoint-initdb.d  # scripts de init
+    ports:
+      - "5432:5432"
+    networks:
+      - lab-network
+
+  # ─── DSPACE ─────────────────────────────────────
+  dspace:
+    image: dspace/dspace:dspace-7_x
+    container_name: lab_dspace
+    restart: unless-stopped
+    environment:
+      - db.url=jdbc:postgresql://postgres:5432/dspace
+      - db.username=labadmin
+      - db.password=cambia_esta_clave
+      - dspace.server.url=http://localhost:8080/server
+      - solr.server=http://solr:8983/sorl
+    depends_on:
+      - postgres
+      - solr
+    ports:
+      - "8080:8080"
+    volumes:
+      # Los archivos y configuraciones de DSpace van a Docker_config
+      - ./Docker_config/dspace/assetstore:/dspace/assetstore
+      # - ./Docker_config/dspace/config:/dspace/config
+    networks:
+      - lab-network
+
+  # DSpace necesita Solr para búsquedas
+  solr:
+    image: solr:8.11
+    container_name: lab_solr
+    restart: unless-stopped
+    ports:
+      - "8983:8983"
+    volumes:
+      # Los índices de búsqueda de Solr también se centralizan aquí
+      - ./Docker_config/dspace/solr:/var/solr
+    networks:
+      - lab-network
+
+networks:
+  lab-network:
+    driver: bridge
